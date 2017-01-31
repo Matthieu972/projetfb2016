@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class C_login extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -54,8 +54,8 @@ class Welcome extends CI_Controller {
             $response1 = $this->fb->get('/me?fields=id,last_name,first_name,gender,birthday,email');
             $idUser = $response1->getDecodedBody();
 
-            var_dump($idUser);
-            //ajoute l'utilisateur sur la base de donnée s'il n'existe pas sinon met à jour ses informations
+            //var_dump($idUser);
+            //ajouter l'utilisateur dans la base de données s'il n'existe pas sinon met à jour ses informations
             $data['id_facebook']  = $idUser['id'];
             $data['first_name']   = $idUser['last_name'];
             $data['last_name']    = $idUser['first_name'];
@@ -66,7 +66,7 @@ class Welcome extends CI_Controller {
                 $data['gender'] = 'F';
             }
             $data['date_cretead'] = date('Y-m-d');
-            var_dump($data);
+            //var_dump($data);
             $this->users->insertUser($idUser['id'], $data);
 
             foreach ($userNode['data'] as $row){
@@ -77,24 +77,28 @@ class Welcome extends CI_Controller {
             for ($i = 0; $i<count($tabAdmin); $i++){
                 if($tabAdmin[$i] == $idUser['id']){
                     $_SESSION['idAdmin'] = $idUser['id'];
-                    //redirect(base_url('admin'));
+                    redirect(base_url('admin'));
                 }else{
-                    //$this->load->view('welcome_message');
+                    $this->load->view('v_home');
                 }
             }
         	$loginUrl = base_url().'welcome/logout';
             echo '<a href="' . htmlspecialchars($loginUrl) . '">Deconnexion!</a>';
         }else{
-        	echo 'non connecter';
-        	$helper = $this->fb->getRedirectLoginHelper();
-	        $permissions = ['email', 'user_photos'];
-	        $loginUrl = $helper->getLoginUrl(base_url().'welcome/loginFacebook', $permissions);
-	        echo '<a href="' . htmlspecialchars($loginUrl) . '">Se connecter!</a>';
+        	//echo 'non connecter';
+            $helper = $this->fb->getRedirectLoginHelper();
+            $permissions = ['email', 'user_photos'];
+            $data['loginUrl'] = $helper->getLoginUrl(base_url().'c_login/accessToken', $permissions);
+            //echo '<a href="' . htmlspecialchars($loginUrl) . '">Se connecter!</a>';
+        	$this->load->view('v_login', $data);
         }
 	}
-    
+
+	public function login(){
+
+    }
    
-    public function loginFacebook()
+    public function accessToken()
     {
 
         $helper = $this->fb->getRedirectLoginHelper();

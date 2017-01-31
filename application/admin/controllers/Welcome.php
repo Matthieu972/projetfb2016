@@ -22,8 +22,8 @@ class Welcome extends CI_Controller {
 	{
         if($_SESSION['facebook_access_token']){
             if (isset($_SESSION['idAdmin'])){
-                echo $_SESSION['idAdmin'];
-                $this->load->view('welcome_message');
+                //echo $_SESSION['idAdmin'];
+                $this->load->view('index');
             }else{
                 redirect(base_url());
             }

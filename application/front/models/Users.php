@@ -12,7 +12,7 @@ class Users extends CI_Model
     public function insertUser($id, $data){
         $this->db->where('id_facebook',$id);
         $q = $this->db->get('users');
-        var_dump($q->num_rows());
+        //var_dump($q->num_rows());
         if ( $q->num_rows() > 0 )
         {
             $data = array(
