@@ -1,0 +1,156 @@
+-- phpMyAdmin SQL Dump
+-- version 4.6.4
+-- https://www.phpmyadmin.net/
+--
+-- Client :  localhost:3306
+-- Généré le :  Sam 04 Février 2017 à 22:20
+-- Version du serveur :  5.6.33
+-- Version de PHP :  7.0.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Base de données :  `projet_facebook`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `contest`
+--
+
+CREATE TABLE `contest` (
+  `id_contest` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `description` longtext NOT NULL,
+  `date_start` date NOT NULL,
+  `date_end` date NOT NULL,
+  `name_price` varchar(50) NOT NULL,
+  `link_price` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `contest`
+--
+
+INSERT INTO `contest` (`id_contest`, `name`, `description`, `date_start`, `date_end`, `name_price`, `link_price`) VALUES
+(1, 'test1', 'sqfgnsjofgnf jfnjnf  skjfnsd jf ssd j fs js dj  jdsn jfdn j nsfd', '2017-02-03', '2017-02-16', 'ordi', '');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `participation`
+--
+
+CREATE TABLE `participation` (
+  `id_participation` int(11) NOT NULL,
+  `id_user` varchar(30) NOT NULL,
+  `id_contest` int(11) NOT NULL,
+  `id_photo` varchar(30) NOT NULL,
+  `link_photo` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `users`
+--
+
+CREATE TABLE `users` (
+  `id_facebook` varchar(30) CHARACTER SET utf8 NOT NULL,
+  `first_name` varchar(30) CHARACTER SET utf8 NOT NULL,
+  `last_name` varchar(30) CHARACTER SET utf8 NOT NULL,
+  `email` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `gender` blob,
+  `date_cretead` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Contenu de la table `users`
+--
+
+INSERT INTO `users` (`id_facebook`, `first_name`, `last_name`, `email`, `gender`, `date_cretead`) VALUES
+('130963364075222', 'Chaiwitz', 'Patricia', 'fgadeodymk_1484439698@tfbnw.net', 0x46, '2017-02-03');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `vote`
+--
+
+CREATE TABLE `vote` (
+  `id_vote` int(11) NOT NULL,
+  `date_vote` date NOT NULL,
+  `id_user` varchar(30) NOT NULL,
+  `id_participation` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Index pour les tables exportées
+--
+
+--
+-- Index pour la table `contest`
+--
+ALTER TABLE `contest`
+  ADD PRIMARY KEY (`id_contest`);
+
+--
+-- Index pour la table `participation`
+--
+ALTER TABLE `participation`
+  ADD PRIMARY KEY (`id_participation`),
+  ADD KEY `id_user` (`id_user`,`id_contest`),
+  ADD KEY `id_contest` (`id_contest`);
+
+--
+-- Index pour la table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id_facebook`);
+
+--
+-- Index pour la table `vote`
+--
+ALTER TABLE `vote`
+  ADD PRIMARY KEY (`id_vote`),
+  ADD KEY `id_user` (`id_user`),
+  ADD KEY `id_paricipation` (`id_participation`);
+
+--
+-- AUTO_INCREMENT pour les tables exportées
+--
+
+--
+-- AUTO_INCREMENT pour la table `contest`
+--
+ALTER TABLE `contest`
+  MODIFY `id_contest` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT pour la table `participation`
+--
+ALTER TABLE `participation`
+  MODIFY `id_participation` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `vote`
+--
+ALTER TABLE `vote`
+  MODIFY `id_vote` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- Contraintes pour les tables exportées
+--
+
+--
+-- Contraintes pour la table `participation`
+--
+ALTER TABLE `participation`
+  ADD CONSTRAINT `participation_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_facebook`),
+  ADD CONSTRAINT `participation_ibfk_2` FOREIGN KEY (`id_contest`) REFERENCES `contest` (`id_contest`);
+
+--
+-- Contraintes pour la table `vote`
+--
+ALTER TABLE `vote`
+  ADD CONSTRAINT `vote_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_facebook`),
+  ADD CONSTRAINT `vote_ibfk_2` FOREIGN KEY (`id_participation`) REFERENCES `participation` (`id_participation`);

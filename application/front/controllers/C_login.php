@@ -79,7 +79,12 @@ class C_login extends CI_Controller {
                     $_SESSION['idAdmin'] = $idUser['id'];
                     redirect(base_url('admin'));
                 }else{
-                    $this->load->view('v_home');
+                    var_dump($idUser);
+                    $_SESSION['idUser'] = $idUser['id'];
+                    $_SESSION['nomUser'] = $idUser['last_name'];
+                    $_SESSION['prenomUser'] = $idUser['first_name'];
+                    //$this->load->view('v_home');
+                    redirect(base_url('admin'));
                 }
             }
         	$loginUrl = base_url().'welcome/logout';

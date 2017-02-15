@@ -1,6 +1,21 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
     <head>
+
+
+        <?php 
+ 
+             $json = file_get_contents("data.json");
+             $parsed_json = json_decode($json);
+ 
+             $ftColor = $parsed_json->{'font'};
+             $bgColor = $parsed_json->{'background'};
+             $l = $parsed_json->{'width'};
+             $h = $parsed_json->{'height'};
+ 
+         ?>
+
+
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
         <title>Mario facebook</title>
@@ -22,6 +37,19 @@
         <script>
             var lien = '<?php echo base_url(); ?>';
         </script>
+        
+        <style type="text/css">
+             h1 {
+                 color: <?php echo $ftColor; ?>;
+             }
+             body {
+                 background-color: <?php echo $bgColor; ?>;
+             }
+             img {
+                 width: <?php echo $l; ?>px;
+                 height: <?php echo $h; ?>px;
+             }
+         </style>        
     </head>
     <body>
     <?php if(isset($_SESSION['facebook_access_token'])){ ?>

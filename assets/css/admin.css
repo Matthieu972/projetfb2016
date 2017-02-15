@@ -1,0 +1,25 @@
+/**
+*Fond des pages
+**/
+.gainsboro{
+  background-color: gainsboro;
+}
+
+
+/**
+*Concours actuel
+**/
+.text-center{
+	text-align: center;
+}
+
+.text-right{
+	text-align: right;
+}
+
+/**
+*Historique
+**/
+.block-margin{
+	margin-top: 50px;
+}
