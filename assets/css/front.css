@@ -1,0 +1,214 @@
+body {
+  margin-bottom: 60px;
+}
+#body_login {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url("../images/fond_connexion.jpg");
+    background-position: center center;
+    background-size: cover;
+}
+.home {
+    margin-top: 75px;
+}
+#title_home {
+    color: #FFFFFF;
+}
+#div_login {
+    bottom: 0;
+    height: 50px;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: center;
+}
+#div_login span {
+    color: white;
+    font-size: 20px;
+    font-weight: bolder;
+}
+#body_filtre {
+    background: rgba(0, 0, 0, 0.6) none repeat scroll 0 0;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+.modal-body img { max-width: 100%; }
+/**
+*Entête
+**/
+.brand {
+    display: inherit;
+    font-family: "Josefin Slab","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 5em;
+    font-weight: 700;
+    line-height: normal;
+    margin: 0;
+    padding: 30px 0 10px;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+#logo:hover { text-decoration: none; color: #337ab7; }
+/**
+*Menu de navigation
+**/
+.navbar-header {
+    display: none;
+}
+#menu {
+    display: table;
+    float: none !important;
+    margin: 0 auto;
+}
+#menu li:not(:last-child) {
+    box-shadow: 10px 0 0 -8px saddlebrown;
+}
+#menu li a {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+/**
+*Footer
+**/
+.footer {
+    background-color: #f5f5f5;
+    height: 60px;
+    position: absolute;
+    width: 100%;
+    margin-top: 100px;
+}
+.footer .container .text-muted { margin: 20px 0; }
+
+/**
+*Content
+**/
+#title_home {
+    margin: 50px auto 40px;
+}
+.container form {
+    margin: 20px auto;
+    float: none;
+}
+.thumbAlbum {
+  background-size: cover;
+  background-position: center;
+  height: 200px;
+}
+.thumbPhoto {
+  background-size: cover;
+  background-position: center;
+  height: 300px;
+}
+
+.thumbAlbum img, .thumbPhoto img {
+  display: none;
+}
+
+.thumbnailModif {
+  background-color: #fff;
+  display: block;
+  padding: 6px 0 0;
+  text-align: center;
+}
+.albums {
+  border: 5px solid;
+  padding: 6px;
+}
+.listAlbum {
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+/**
+*contest
+ */
+.contest {
+    margin-top: 50px;
+}
+
+/**
+*partcipation
+ */
+.participation {
+    margin-top: 30px;
+}
+.participation h3 {
+    text-align: center;
+    color: #FFFFFF;
+}
+#listPhotos {
+    color: #FFFFFF;
+    text-align: center;
+}
+.form_participation .form-group {
+    color: #FFFFFF;
+    text-align: center;
+}
+.form_participation .form-group input {
+    margin: 0 auto;
+}
+.form_participation button {
+    display: block;
+    margin: 0 auto;
+}
+.participation #title_home {
+    margin-bottom: 10px;
+}
+.participation div div:first-child {
+    margin-bottom: 40px;
+    color: #FFFFFF;
+}
+
+/**
+*contact
+ */
+.contact {
+    margin-top: 50px;
+}
+.contact label {
+    color: #FFFFFF;
+}
+
+
+/**
+*popup
+**/
+.popup {
+    background: rgba(100, 100, 100, 0.6);
+    position: fixed;
+    display: none;
+    z-index: 5000;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+.popup div {
+      border-radius: 10px;
+      position: fixed;
+      background: #FFFFFF;
+      box-shadow: 0px 0px 15px 0px rgba(#000000, 0.3);
+      padding: 30px 15px;
+      /* Width of popup can be changed */
+      width: 70%;
+      max-width: 600px;
+      z-index: 5001;
+      transform: translate(-50%, -50%);
+      left: 50%;
+      top: 50%;
+      text-align: center;
+      border: 5px solid #9AD3DE;
+  }
+
+/*
+*media querie
+*/
+@media screen and (max-width:768px) {
+    .navbar-header {
+        display: block;
+    }
+}

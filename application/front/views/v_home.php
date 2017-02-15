@@ -1,7 +1,7 @@
 <?php include('v_header.php'); $this->load->helper('html'); ?>
 
-<div class="container">
-    <img src="http://placehold.it/1200x315" class="img-responsive" alt="Responsive image">
+<div class="container home">
+    <img src="<?php echo base_url(); ?>assets/images/prix.jpg" class="img-responsive" alt="Responsive image">
 </div>
 
 <div class="container text-center">

@@ -34,27 +34,45 @@ class C_login extends CI_Controller {
 
 	public function index()
 	{
-		
         if(isset($_SESSION['facebook_access_token']))
         {
+            //$this->checkAccessToken();
+            //var_dump($this->fb->setDefaultAccessToken($_SESSION['facebook_access_token']));
+            //var_dump($_SESSION['facebook_access_token']);
+            //var_dump($this->checkAccessToken());
             $this->fb->setDefaultAccessToken($_SESSION['facebook_access_token']);
-            /*Pour poster un message sur le mur de l'utilisateur*/
-            /*$data = ['message' => 'test'];
-            $this->fb->post('me/feed', $data); permission = publish_actions*/
+            $missingPermissions = array();
+            $responses = $this->fb->get("/me/permissions");
+            $userNodes = $responses->getDecodedBody();
+            foreach ($userNodes["data"] as $row){
+                if($row['status'] == 'declined'){
+                    $missingPermissions[] = $row['permission'];
+                }
+            }
+            if(!empty($missingPermissions)){
+                $helper = $this->fb->getRedirectLoginHelper();
+                $permissions = ['email', 'user_photos'];
+                //$data['loginUrl'] = $helper->getLoginUrl(base_url().'c_login/callback', $missingPermissions);
+                $data['loginUrl'] = $helper->getReRequestUrl(base_url(), $missingPermissions);
+                echo '<script>window.top.location.href="'.$data['loginUrl'].'"</script>';
+                //echo '<script>window.top.location.href="https://www.facebook.com/v2.8/dialog/oauth?client_id=261909090895855&state=5d4d49e026e77e530ca64d8582a47b38&response_type=code&sdk=php-sdk-5.4.3&redirect_uri=http%3A%2F%2Fmario.fbdev.fr%2Fc_login%2Fcallback&scope=email%2Cuser_photos"</script>';
+                //header('Location:'.$data['loginUrl']);
+                //var_dump($data['loginUrl']);
+                //header("Location: https://www.facebook.com/v2.8/dialog/oauth?client_id=261909090895855&redirect_uri=".base_url().$this->fb->getLoginUrl(array("scope" => "email")));
+            }
+            
             //access token de l'application
             $accessTokenApp = '261909090895855|RMMvgf_sNsIHu7mQ7JY07cZTyY8';
-            //var_dump($_SESSION);
-
+            
             $tabAdmin = array();
             //récupère les droits des utilisateurs de l'application
-            //$response = $this->fb->get("/261909090895855/roles", $_SESSION['facebook_access_token']);
             $response = $this->fb->get("/261909090895855/roles",$accessTokenApp);
             $userNode = $response->getDecodedBody();
+            
             //recuperation des informations de l'utilisateur
             $response1 = $this->fb->get('/me?fields=id,last_name,first_name,gender,birthday,email');
             $idUser = $response1->getDecodedBody();
 
-            //var_dump($idUser);
             //ajouter l'utilisateur dans la base de données s'il n'existe pas sinon met à jour ses informations
             $data['id_facebook']  = $idUser['id'];
             $data['first_name']   = $idUser['last_name'];
@@ -66,7 +84,6 @@ class C_login extends CI_Controller {
                 $data['gender'] = 'F';
             }
             $data['date_cretead'] = date('Y-m-d');
-            //var_dump($data);
             $this->users->insertUser($idUser['id'], $data);
 
             foreach ($userNode['data'] as $row){
@@ -74,49 +91,77 @@ class C_login extends CI_Controller {
                     array_push($tabAdmin, $row['user']);
                 }
             }
+           // var_dump($tabAdmin);
             for ($i = 0; $i<count($tabAdmin); $i++){
                 if($tabAdmin[$i] == $idUser['id']){
+                    //echo "admin";
                     $_SESSION['idAdmin'] = $idUser['id'];
+                    $_SESSION['nomAdmin'] = $idUser['nom'];
+                    $_SESSION['prenomAdmin'] = $idUser['prenom'];
                     redirect(base_url('admin'));
                 }else{
+                    //echo "user";
+                    $_SESSION['idUser'] = $idUser['id'];
+                    $_SESSION['nomUser'] = $idUser['nom'];
+                    $_SESSION['prenomUser'] = $idUser['prenom'];
+                    redirect('c_home');
                     $this->load->view('v_home');
                 }
             }
-        	$loginUrl = base_url().'welcome/logout';
-            echo '<a href="' . htmlspecialchars($loginUrl) . '">Deconnexion!</a>';
         }else{
         	//echo 'non connecter';
             $helper = $this->fb->getRedirectLoginHelper();
             $permissions = ['email', 'user_photos'];
-            $data['loginUrl'] = $helper->getLoginUrl(base_url().'c_login/accessToken', $permissions);
+            $data['loginUrl'] = $helper->getLoginUrl(base_url().'c_login/callback', $permissions);
             //echo '<a href="' . htmlspecialchars($loginUrl) . '">Se connecter!</a>';
         	$this->load->view('v_login', $data);
         }
 	}
 
-	public function login(){
-
-    }
-   
-    public function accessToken()
-    {
-
+	public function callback(){
+        // Get the FacebookRedirectLoginHelper
         $helper = $this->fb->getRedirectLoginHelper();
+        $facebookClient = $this->fb->getClient();
 
         try {
             $accessToken = $helper->getAccessToken();
         } catch(Facebook\Exceptions\FacebookResponseException $e) {
+            // When Graph returns an error
             echo 'Graph returned an error: ' . $e->getMessage();
             exit;
         } catch(Facebook\Exceptions\FacebookSDKException $e) {
+            // When validation fails or other local issues
             echo 'Facebook SDK returned an error: ' . $e->getMessage();
             exit;
         }
 
         if (isset($accessToken)) {
+            // Logged in
+            // Store the $accessToken in a PHP session
+            // You can also set the user as "logged in" at this point
             $_SESSION['facebook_access_token'] = (string) $accessToken;
             header('Location: '.base_url());
+        } elseif ($helper->getError()) {
+            // There was an error (user probably rejected the request)
+            echo '<p>Error: ' . $helper->getError();
+            echo '<p>Code: ' . $helper->getErrorCode();
+            echo '<p>Reason: ' . $helper->getErrorReason();
+            echo '<p>Description: ' . $helper->getErrorDescription();
+            exit;
         }
+    }
+    public function checkAccessToken(){
+        if(empty($_SESSION["facebook_access_token"])) return false;
+        try{
+            $accessTokenApp = '261909090895855|RMMvgf_sNsIHu7mQ7JY07cZTyY8';
+            $response = $this->fb->get('debug_token?input_token='.$_SESSION['facebook_access_token'], $accessTokenApp);
+            $graphObject = $response->getGraphObject();
+            $this->fb->setDefaultAccessToken($_SESSION['facebook_access_token']);
+        }catch(Exception $e){
+            return false;
+        }
+        return true;
+
     }
 
     public function logout(){
